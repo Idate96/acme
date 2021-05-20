@@ -141,3 +141,11 @@ cython_debug/
 # static files generated from Django application using `collectstatic`
 media
 static
+
+# bash testing folder
+acme_testing
+
+# vscode project settings
+.vscode
+.github/
+
