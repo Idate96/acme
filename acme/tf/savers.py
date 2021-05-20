@@ -268,6 +268,7 @@ class Snapshotter:
       directory: str = '~/acme/',
       time_delta_minutes: float = 30.0,
       snapshot_ttl_seconds: int = _DEFAULT_SNAPSHOT_TTL,
+      add_uid: bool = True
   ):
     """Builds the saver object.
 
@@ -285,7 +286,7 @@ class Snapshotter:
 
     # Save the base directory path so we can refer to it if needed.
     self.directory = paths.process_path(
-        directory, 'snapshots', ttl_seconds=snapshot_ttl_seconds)
+        directory, 'snapshots', ttl_seconds=snapshot_ttl_seconds, add_uid=add_uid)
 
     # Save a dictionary mapping paths to snapshot capable models.
     for name, module in objects_to_save.items():

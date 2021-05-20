@@ -61,6 +61,8 @@ class DQN(agent.Agent):
       logger: loggers.Logger = None,
       checkpoint: bool = True,
       checkpoint_subpath: str = '~/acme/',
+      time_delta: float = 60.,
+      add_uid: bool = True,
       policy_network: Optional[snt.Module] = None,
       max_gradient_norm: Optional[float] = None,
   ):
@@ -153,14 +155,18 @@ class DQN(agent.Agent):
         replay_client=replay_client,
         max_gradient_norm=max_gradient_norm,
         logger=logger,
-        checkpoint=checkpoint)
+        checkpoint=checkpoint,
+        checkpoint_subpath=checkpoint_subpath,
+        time_delta=time_delta,
+        add_uid=add_uid)
 
     if checkpoint:
       self._checkpointer = tf2_savers.Checkpointer(
           directory=checkpoint_subpath,
           objects_to_save=learner.state,
           subdirectory='dqn_learner',
-          time_delta_minutes=60.)
+          time_delta_minutes=time_delta,
+          add_uid=add_uid)
     else:
       self._checkpointer = None
 

@@ -41,19 +41,20 @@ class CSVLogger(base.Logger):
   def __init__(self,
                directory_or_file: Union[str, TextIO] = '~/acme',
                label: str = '',
-               time_delta: float = 0.):
+               time_delta: float = 0.,
+               add_uid:bool = True):
     self._last_log_time = time.time() - time_delta
     self._time_delta = time_delta
     self._writer = None
-    self._file = self._create_file(directory_or_file, label)
+    self._file = self._create_file(directory_or_file, label, add_uid)
     logging.info('Logging to %s', self.file_path)
 
   def _create_file(self, directory_or_file: Union[str, TextIO],
-                   label: str) -> TextIO:
+                   label: str, add_uid:bool=True) -> TextIO:
     """Opens a file if input is a directory or use existing file."""
     if isinstance(directory_or_file, str):
       directory = paths.process_path(
-          directory_or_file, 'logs', label, add_uid=True)
+          directory_or_file, 'logs', label, add_uid=add_uid)
       file_path = os.path.join(directory, 'logs.csv')
       file = self._open(file_path, mode='a')
     else:

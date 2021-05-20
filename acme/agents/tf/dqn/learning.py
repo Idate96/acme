@@ -55,6 +55,9 @@ class DQNLearner(acme.Learner, tf2_savers.TFSaveable):
       counter: counting.Counter = None,
       logger: loggers.Logger = None,
       checkpoint: bool = True,
+      checkpoint_subpath: str = "~/acme/",
+      add_uid: bool = True,
+      time_delta: float = 60,
       max_gradient_norm: float = None,
   ):
     """Initializes the learner.
@@ -106,7 +109,8 @@ class DQNLearner(acme.Learner, tf2_savers.TFSaveable):
     # Create a snapshotter object.
     if checkpoint:
       self._snapshotter = tf2_savers.Snapshotter(
-          objects_to_save={'network': network}, time_delta_minutes=60.)
+          objects_to_save={'network': network}, time_delta_minutes=time_delta,
+          directory=checkpoint_subpath, add_uid=add_uid)
     else:
       self._snapshotter = None
 
