@@ -100,14 +100,16 @@ class DQN(agent.Agent):
 
     # Create a replay server to add data to. This uses no limiter behavior in
     # order to allow the Agent interface to handle it.
+    reverb_checkpointer = reverb.checkpointers.DefaultCheckpointer(path=checkpoint_subpath)
     replay_table = reverb.Table(
         name=adders.DEFAULT_PRIORITY_TABLE,
         sampler=reverb.selectors.Prioritized(priority_exponent),
         remover=reverb.selectors.Fifo(),
         max_size=max_replay_size,
         rate_limiter=reverb.rate_limiters.MinSize(1),
-        signature=adders.NStepTransitionAdder.signature(environment_spec))
-    self._server = reverb.Server([replay_table], port=None)
+        signature=adders.NStepTransitionAdder.signature(environment_spec),
+        )
+    self._server = reverb.Server([replay_table], port=None, checkpointer=reverb_checkpointer)
 
     # The adder is used to insert observations into replay.
     address = f'localhost:{self._server.port}'
@@ -157,7 +159,7 @@ class DQN(agent.Agent):
         logger=logger,
         checkpoint=checkpoint,
         checkpoint_subpath=checkpoint_subpath,
-        time_delta=time_delta,
+        time_delta=60.,
         add_uid=add_uid)
 
     if checkpoint:
